@@ -1,35 +1,63 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase, isConfigured } from '../lib/supabase'
+import { Zap, Droplets, Sparkles, Hammer, PaintRoller, HardHat, Wrench, Sprout, Truck, Briefcase, ChevronRight, type LucideIcon } from 'lucide-react'
+import { supabase } from '../lib/supabase'
+import { LISTING_SELECT, type Cat, type Listing } from '../lib/constants'
+import { btnPrimary, btnSecondary, cardCls } from '../lib/ui'
+import ServiceCard from '../components/ServiceCard'
 
-type Category = { id: string; name: string; slug: string }
+const ICONS: Record<string, LucideIcon> = { zap: Zap, droplets: Droplets, sparkles: Sparkles, hammer: Hammer, 'paint-roller': PaintRoller, 'hard-hat': HardHat, wrench: Wrench, sprout: Sprout, truck: Truck }
 
 export default function Landing() {
-  const [cats, setCats] = useState<Category[] | null>(null)
+  const [cats, setCats] = useState<Cat[] | null>(null)
+  const [latest, setLatest] = useState<Listing[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   useEffect(() => {
-    if (!isConfigured) { setError('Supabase is not configured. Add the values from .env.example to .env.'); return }
-    supabase.from('service_categories').select('id,name,slug').eq('is_active', true).order('name')
-      .then(({ data, error }) => error ? setError('Could not load services. Check your connection and try again.') : setCats(data))
+    supabase.from('service_categories').select('id,name,slug,icon_name').eq('is_active', true).order('name')
+      .then(({ data, error }) => error ? setError('Could not load services. Check your connection and try again.') : setCats(data as Cat[]))
+    supabase.from('worker_services').select(LISTING_SELECT).eq('is_active', true).order('created_at', { ascending: false }).limit(3)
+      .then(({ data }) => setLatest((data ?? []) as unknown as Listing[]))
   }, [])
   return (
-    <div className="space-y-12">
-      <section className="py-6">
-        <h1 className="max-w-xl text-4xl font-bold tracking-tight sm:text-5xl">Find the right person for the job.</h1>
-        <p className="mt-4 max-w-lg text-lg text-muted">Discover skilled local professionals or post your job and compare offers from workers ready to help.</p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link to="/signup" className="rounded-xl bg-brand px-5 min-h-11 inline-flex items-center font-medium text-white hover:bg-brand-dark">Create an account</Link>
-          <Link to="/signin" className="rounded-xl border border-line bg-white px-5 min-h-11 inline-flex items-center font-medium">Sign in</Link>
+    <div className="space-y-16">
+      <section className="rise max-w-2xl pt-4 sm:pt-10">
+        <h1 className="text-[2.75rem] font-bold leading-[1.05] tracking-tight sm:text-6xl">Find the right person for the job.</h1>
+        <p className="mt-5 max-w-xl text-lg text-muted">Discover skilled local professionals, compare their prices and read honest reviews from real customers.</p>
+        <div className="rise rise-2 mt-8 flex flex-wrap gap-3">
+          <Link to="/workers" className={btnPrimary}>Find a worker</Link>
+          <Link to="/signup" className={btnSecondary}>Offer your services</Link>
         </div>
-        <p className="mt-3 text-sm text-muted">Payment is arranged directly between customer and worker.</p>
       </section>
+
       <section aria-labelledby="svc">
-        <h2 id="svc" className="text-2xl font-semibold">Services</h2>
-        {error && <p role="alert" className="mt-4 rounded-xl border border-line bg-white p-4 text-error">{error}</p>}
-        {!error && cats === null && <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">{Array.from({ length: 10 }, (_, i) => <div key={i} className="h-16 animate-pulse rounded-2xl bg-subtle" />)}</div>}
-        {cats?.length === 0 && <p className="mt-4 text-muted">No services have been added yet.</p>}
-        {cats && cats.length > 0 && <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          {cats.map(c => <li key={c.id} className="rounded-2xl border border-line bg-white p-4 font-medium">{c.name}</li>)}</ul>}
+        <h2 id="svc" className="text-2xl font-bold tracking-tight">Browse by service</h2>
+        {error && <p role="alert" className="mt-4 text-error">{error}</p>}
+        {!error && !cats && <div className="mt-4 h-64 animate-pulse rounded-2xl bg-subtle" />}
+        {cats && <ul className={`${cardCls} mt-4 divide-y divide-line overflow-hidden sm:columns-2 sm:divide-y-0`}>
+          {cats.map(c => { const Icon = ICONS[c.icon_name ?? ''] ?? Briefcase; return (
+            <li key={c.id} className="break-inside-avoid border-line sm:border-b">
+              <Link to={`/workers?category=${c.slug}`} className="flex min-h-14 items-center gap-3 px-4 hover:bg-subtle active:bg-subtle">
+                <Icon size={22} strokeWidth={1.75} className="text-brand" aria-hidden /><span className="flex-1 font-medium">{c.name}</span><ChevronRight size={18} className="text-muted" aria-hidden />
+              </Link></li>) })}
+        </ul>}
+      </section>
+
+      <section aria-labelledby="latest">
+        <h2 id="latest" className="text-2xl font-bold tracking-tight">Newly listed workers</h2>
+        {latest === null && <div className="mt-4 h-40 animate-pulse rounded-2xl bg-subtle" />}
+        {latest?.length === 0 && <div className={`${cardCls} mt-4 p-6`}><p className="font-semibold">No workers have listed services yet.</p>
+          <p className="mt-1 text-muted">Be one of the first. Create an account, switch on worker mode and add your first service.</p>
+          <Link to="/signup" className={`${btnPrimary} mt-4`}>Create an account</Link></div>}
+        {latest && latest.length > 0 && <div className="mt-4 grid gap-3 md:grid-cols-3">{latest.map(l => <ServiceCard key={l.id} l={l} />)}</div>}
+      </section>
+
+      <section aria-labelledby="how">
+        <h2 id="how" className="text-2xl font-bold tracking-tight">How it works</h2>
+        <ol className="mt-4 grid gap-3 md:grid-cols-3">
+          {['Search by service and district.', 'Read the profile, prices and reviews. Only genuine reviews are ever shown.', 'Agree the details and pay the worker directly.'].map((t, i) => (
+            <li key={i} className={`${cardCls} p-5`}><span className="text-sm font-semibold text-brand">Step {i + 1}</span><p className="mt-1">{t}</p></li>))}
+        </ol>
+        <p className="mt-4 text-sm text-muted">Posting a job and comparing offers is the next feature we are adding.</p>
       </section>
     </div>)
 }

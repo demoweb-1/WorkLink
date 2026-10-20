@@ -3,11 +3,11 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth'
 
-const input = 'mt-1 w-full rounded-xl border border-line bg-white px-3 min-h-11'
-const btn = 'w-full rounded-xl bg-brand min-h-11 font-medium text-white hover:bg-brand-dark disabled:opacity-60'
+import { inputCls as input, btnPrimary } from '../lib/ui'
+const btn = btnPrimary + ' w-full'
 
 function Shell({ title, children }: { title: string; children: ReactNode }) {
-  return <div className="mx-auto max-w-sm"><h1 className="mb-6 text-3xl font-bold">{title}</h1>{children}</div>
+  return <div className="mx-auto max-w-sm"><h1 className="mb-6 text-4xl font-bold tracking-tight">{title}</h1>{children}</div>
 }
 
 export function SignIn() {

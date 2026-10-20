@@ -3,9 +3,13 @@
   --color-bg:#F8FAFC; --color-ink:#111827; --color-muted:#64748B;
   --color-brand:#2563EB; --color-brand-dark:#1D4ED8; --color-brand-soft:#EFF6FF;
   --color-lime:#B7F36B; --color-line:#E2E8F0; --color-subtle:#F1F5F9; --color-night:#0B1220;
-  --color-error:#B91C1C; --color-success:#15803D;
-  --font-sans:Inter,"Noto Sans Sinhala","Noto Sans Tamil",system-ui,sans-serif;
+  --color-error:#B91C1C; --color-success:#15803D; --color-warning:#B45309;
+  --font-sans:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,"Noto Sans Sinhala","Noto Sans Tamil",system-ui,sans-serif;
 }
-body{background:var(--color-bg);color:var(--color-ink);font-family:var(--font-sans)}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--color-bg);color:var(--color-ink);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 :focus-visible{outline:2px solid var(--color-brand);outline-offset:2px}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rise{animation:rise .32s cubic-bezier(.22,1,.36,1) both}
+.rise-2{animation-delay:.08s}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
