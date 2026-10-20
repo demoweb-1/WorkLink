@@ -3,10 +3,10 @@ import { MapPin } from 'lucide-react'
 import { priceText, type Listing } from '../lib/constants'
 import { cardCls } from '../lib/ui'
 
-export default function ServiceCard({ l }: { l: Listing }) {
+export default function ServiceCard({ l, i = 0 }: { l: Listing; i?: number }) {
   const name = l.profiles?.display_name ?? 'Worker'
   return (
-    <Link to={`/workers/${l.worker_id}`} className={`${cardCls} block p-4 transition duration-150 hover:border-brand/40 active:scale-[0.99]`}>
+    <Link to={`/workers/${l.worker_id}`} style={{ animationDelay: `${Math.min(i, 8) * 45}ms` }} className={`${cardCls} pop block p-4 transition duration-150 hover:border-brand/40 active:scale-[0.99]`}>
       <div className="flex items-start gap-3">
         <div aria-hidden className="grid size-12 shrink-0 place-items-center rounded-full bg-brand-soft text-lg font-bold text-brand">{name.charAt(0).toUpperCase()}</div>
         <div className="min-w-0">

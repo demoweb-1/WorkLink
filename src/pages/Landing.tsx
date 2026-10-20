@@ -20,10 +20,10 @@ export default function Landing() {
   }, [])
   return (
     <div className="space-y-16">
-      <section className="rise max-w-2xl pt-4 sm:pt-10">
-        <h1 className="text-[2.75rem] font-bold leading-[1.05] tracking-tight sm:text-6xl">Find the right person for the job.</h1>
-        <p className="mt-5 max-w-xl text-lg text-muted">Discover skilled local professionals, compare their prices and read honest reviews from real customers.</p>
-        <div className="rise rise-2 mt-8 flex flex-wrap gap-3">
+      <section className="max-w-2xl pt-4 sm:pt-10">
+        <h1 className="rise text-[2.75rem] font-bold leading-[1.05] tracking-tight sm:text-6xl">Find the right person for the job.</h1>
+        <p className="rise rise-2 mt-5 max-w-xl text-lg text-muted">Discover skilled local professionals, compare their prices and read honest reviews from real customers.</p>
+        <div className="rise rise-3 mt-8 flex flex-wrap gap-3">
           <Link to="/workers" className={btnPrimary}>Find a worker</Link>
           <Link to="/signup" className={btnSecondary}>Offer your services</Link>
         </div>
@@ -48,7 +48,7 @@ export default function Landing() {
         {latest?.length === 0 && <div className={`${cardCls} mt-4 p-6`}><p className="font-semibold">No workers have listed services yet.</p>
           <p className="mt-1 text-muted">Be one of the first. Create an account, switch on worker mode and add your first service.</p>
           <Link to="/signup" className={`${btnPrimary} mt-4`}>Create an account</Link></div>}
-        {latest && latest.length > 0 && <div className="mt-4 grid gap-3 md:grid-cols-3">{latest.map(l => <ServiceCard key={l.id} l={l} />)}</div>}
+        {latest && latest.length > 0 && <div className="mt-4 grid gap-3 md:grid-cols-3">{latest.map((l, i) => <ServiceCard key={l.id} l={l} i={i} />)}</div>}
       </section>
 
       <section aria-labelledby="how">

@@ -6,7 +6,7 @@ import { DISTRICTS } from '../lib/constants'
 import { btnPrimary, btnSecondary, cardCls, inputCls, labelCls } from '../lib/ui'
 
 export default function Account() {
-  const { session, profile, refreshProfile } = useAuth()
+  const { session, profile, refreshProfile, signOut } = useAuth()
   const [msg, setMsg] = useState<string | null>(null); const [err, setErr] = useState<string | null>(null)
   if (!profile) return <p className="text-muted">Loading…</p>
   async function update(patch: Partial<{ is_worker: boolean; district: string | null }>, ok: string) {
@@ -29,6 +29,6 @@ export default function Account() {
             : <button onClick={() => update({ is_worker: true }, 'Worker mode is on.')} className={btnPrimary}>Turn on worker mode</button>}
         </div>
       </section>
-      {err && <p role="alert" className="text-error">{err}</p>}{msg && <p role="status" className="text-success">{msg}</p>}
+      {err && <p role="alert" className="pop text-error">{err}</p>}{msg && <p role="status" className="pop text-success">{msg}</p>}<button onClick={signOut} className={btnSecondary}>Sign out</button>
     </div>)
 }

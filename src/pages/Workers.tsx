@@ -67,7 +67,7 @@ export default function Workers() {
         {error && <p role="alert" className="text-error">{error}</p>}
         {loading && <div className="grid gap-3 md:grid-cols-2">{[0, 1, 2, 3].map(i => <div key={i} className="h-44 animate-pulse rounded-2xl bg-subtle" />)}</div>}
         {!loading && !error && items.length === 0 && <p className="text-muted">{filtered ? 'No workers match these filters. Try another service or district.' : 'No workers have listed services yet. Check back soon.'}</p>}
-        {!loading && items.length > 0 && <div className="grid gap-3 md:grid-cols-2">{items.map(l => <ServiceCard key={l.id} l={l} />)}</div>}
+        {!loading && items.length > 0 && <div className="grid gap-3 md:grid-cols-2">{items.map((l, i) => <ServiceCard key={l.id} l={l} i={i % PAGE} />)}</div>}
         {!loading && more && <div className="mt-6 text-center"><button onClick={loadMore} className={btnSecondary}>Load more</button></div>}
       </div>
     </div>)
