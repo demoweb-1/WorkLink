@@ -16,7 +16,7 @@ body{background:var(--color-bg);color:var(--color-ink);font-family:var(--font-sa
 
 /* ---------- Liquid Glass (navigation layer only) ---------- */
 .glass{
-  position:relative;
+
   background:
     linear-gradient(115deg,rgba(255,255,255,.55),rgba(255,255,255,0) 42%),
     linear-gradient(180deg,rgba(255,255,255,.74),rgba(255,255,255,.56));

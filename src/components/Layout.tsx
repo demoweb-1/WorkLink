@@ -16,14 +16,14 @@ export default function Layout() {
   ]
   const topItems = items.filter(i => i.to !== '/signin')
   return (
-    <div className="relative isolate min-h-dvh">
+    <div className="relative isolate min-h-dvh overflow-x-clip">
       <div aria-hidden className="ambient" />
       <header className="sticky top-0 z-30 px-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
         <div className="glass mx-auto flex max-w-5xl items-center justify-between gap-3 rounded-full py-1.5 pl-5 pr-1.5">
           <Link to="/" className="inline-flex min-h-11 items-center text-xl font-bold tracking-tight">{BRAND}<span className="text-lime">.</span></Link>
           <GlassNav items={topItems} variant="top" />
           <div className="flex items-center gap-1">
-            {session ? <button onClick={signOut} className={`${btnSecondary} !min-h-10 hidden text-sm md:inline-flex`}>Sign out</button>
+            {session ? <div className="hidden md:block"><button onClick={signOut} className={`${btnSecondary} !min-h-10 text-sm`}>Sign out</button></div>
               : <><Link to="/signin" className="hidden min-h-11 items-center px-4 text-sm font-medium md:inline-flex">Sign in</Link>
                   <Link to="/signup" className={`${btnPrimary} !min-h-10 text-sm`}>Create account</Link></>}
           </div>
