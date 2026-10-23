@@ -1,17 +1,17 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Home, Search, Wrench, User, LogIn } from 'lucide-react'
+import { Home, Search, Briefcase, CalendarCheck, User, LogIn } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import { BRAND } from '../lib/constants'
 import { btnPrimary, btnSecondary } from '../lib/ui'
 import GlassNav, { type NavItem } from './GlassNav'
 
 export default function Layout() {
-  const { session, profile, signOut } = useAuth()
+  const { session, signOut } = useAuth()
   const { pathname } = useLocation()
   const items: NavItem[] = [
     { to: '/', label: 'Home', icon: Home, end: true },
     { to: '/workers', label: 'Workers', icon: Search },
-    ...(session && profile?.is_worker ? [{ to: '/my-services', label: 'My services', icon: Wrench }] : []),
+    ...(session ? [{ to: '/jobs', label: 'Jobs', icon: Briefcase }, { to: '/bookings', label: 'Bookings', icon: CalendarCheck }] : []),
     ...(session ? [{ to: '/account', label: 'Account', icon: User }] : [{ to: '/signin', label: 'Sign in', icon: LogIn }]),
   ]
   const topItems = items.filter(i => i.to !== '/signin')

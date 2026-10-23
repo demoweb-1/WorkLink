@@ -7,6 +7,11 @@ import Workers from './pages/Workers'
 import WorkerProfile from './pages/WorkerProfile'
 import MyServices from './pages/MyServices'
 import Account from './pages/Account'
+import JobsHub from './pages/JobsHub'
+import PostJob from './pages/PostJob'
+import JobDetail from './pages/JobDetail'
+import Bookings from './pages/Bookings'
+import BookingDetail from './pages/BookingDetail'
 import { SignIn, SignUp } from './pages/AuthPages'
 
 function Protected({ children }: { children: ReactElement }) {
@@ -25,6 +30,11 @@ export default function App() {
         <Route path="signin" element={<SignIn />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="account" element={<Protected><Account /></Protected>} />
+        <Route path="jobs" element={<Protected><JobsHub /></Protected>} />
+        <Route path="jobs/new" element={<Protected><PostJob /></Protected>} />
+        <Route path="jobs/:id" element={<Protected><JobDetail /></Protected>} />
+        <Route path="bookings" element={<Protected><Bookings /></Protected>} />
+        <Route path="bookings/:id" element={<Protected><BookingDetail /></Protected>} />
         <Route path="my-services" element={<Protected><MyServices /></Protected>} />
         <Route path="*" element={<p>Page not found. <Link className="text-brand underline" to="/">Go home</Link></p>} />
       </Route>

@@ -25,7 +25,7 @@ export default function Landing() {
         <p className="rise rise-2 mt-5 max-w-xl text-lg text-muted">Discover skilled local professionals, compare their prices and read honest reviews from real customers.</p>
         <div className="rise rise-3 mt-8 flex flex-wrap gap-3">
           <Link to="/workers" className={btnPrimary}>Find a worker</Link>
-          <Link to="/signup" className={btnSecondary}>Offer your services</Link>
+          <Link to="/jobs/new" className={btnSecondary}>Post a job</Link>
         </div>
       </section>
 
@@ -54,10 +54,9 @@ export default function Landing() {
       <section aria-labelledby="how">
         <h2 id="how" className="text-2xl font-bold tracking-tight">How it works</h2>
         <ol className="mt-4 grid gap-3 md:grid-cols-3">
-          {['Search by service and district.', 'Read the profile, prices and reviews. Only genuine reviews are ever shown.', 'Agree the details and pay the worker directly.'].map((t, i) => (
+          {['Search by service and district, or post a job describing what you need.', 'Compare profiles, prices and offers. Only genuine reviews are ever shown.', 'Choose a worker, agree the details and pay them directly.'].map((t, i) => (
             <li key={i} className={`${cardCls} p-5`}><span className="text-sm font-semibold text-brand">Step {i + 1}</span><p className="mt-1">{t}</p></li>))}
         </ol>
-        <p className="mt-4 text-sm text-muted">Posting a job and comparing offers is the next feature we are adding.</p>
       </section>
     </div>)
 }
