@@ -4,5 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App'
 import { AuthProvider } from './lib/auth'
+import { I18nProvider } from './lib/i18n'
 createRoot(document.getElementById('root')!).render(
-  <StrictMode><BrowserRouter basename={import.meta.env.BASE_URL}><AuthProvider><App /></AuthProvider></BrowserRouter></StrictMode>)
+  <StrictMode><BrowserRouter basename={import.meta.env.BASE_URL}><I18nProvider><AuthProvider><App /></AuthProvider></I18nProvider></BrowserRouter></StrictMode>)

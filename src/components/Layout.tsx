@@ -3,16 +3,18 @@ import { Home, Search, Briefcase, CalendarCheck, User, LogIn } from 'lucide-reac
 import { useAuth } from '../lib/auth'
 import { BRAND } from '../lib/constants'
 import { btnPrimary, btnSecondary } from '../lib/ui'
+import { useI18n, type Lang } from '../lib/i18n'
 import GlassNav, { type NavItem } from './GlassNav'
 
 export default function Layout() {
   const { session, signOut } = useAuth()
   const { pathname } = useLocation()
+  const { t, lang, setLang } = useI18n()
   const items: NavItem[] = [
-    { to: '/', label: 'Home', icon: Home, end: true },
-    { to: '/workers', label: 'Workers', icon: Search },
-    ...(session ? [{ to: '/jobs', label: 'Jobs', icon: Briefcase }, { to: '/bookings', label: 'Bookings', icon: CalendarCheck }] : []),
-    ...(session ? [{ to: '/account', label: 'Account', icon: User }] : [{ to: '/signin', label: 'Sign in', icon: LogIn }]),
+    { to: '/', label: t('nav.home'), icon: Home, end: true },
+    { to: '/workers', label: t('nav.workers'), icon: Search },
+    ...(session ? [{ to: '/jobs', label: t('nav.jobs'), icon: Briefcase }, { to: '/bookings', label: t('nav.bookings'), icon: CalendarCheck }] : []),
+    ...(session ? [{ to: '/account', label: t('nav.account'), icon: User }] : [{ to: '/signin', label: t('nav.signin'), icon: LogIn }]),
   ]
   const topItems = items.filter(i => i.to !== '/signin')
   return (
@@ -23,9 +25,11 @@ export default function Layout() {
           <Link to="/" className="inline-flex min-h-11 items-center text-xl font-bold tracking-tight">{BRAND}<span className="text-lime">.</span></Link>
           <GlassNav items={topItems} variant="top" />
           <div className="flex items-center gap-1">
+            <select aria-label="Language" value={lang} onChange={e => setLang(e.target.value as Lang)} className="min-h-10 rounded-full border border-line bg-white/70 px-2 text-sm font-semibold">
+              <option value="en">EN</option><option value="si">සිං</option><option value="ta">த</option></select>
             {session ? <div className="hidden md:block"><button onClick={signOut} className={`${btnSecondary} !min-h-10 text-sm`}>Sign out</button></div>
-              : <><Link to="/signin" className="hidden min-h-11 items-center px-4 text-sm font-medium md:inline-flex">Sign in</Link>
-                  <Link to="/signup" className={`${btnPrimary} !min-h-10 text-sm`}>Create account</Link></>}
+              : <><Link to="/signin" className="hidden min-h-11 items-center px-4 text-sm font-medium md:inline-flex">{t('nav.signin')}</Link>
+                  <Link to="/signup" className={`${btnPrimary} !min-h-10 text-sm`}>{t('nav.create')}</Link></>}
           </div>
         </div>
       </header>

@@ -4,6 +4,7 @@ import { useAuth } from './lib/auth'
 import Layout from './components/Layout'
 import Landing from './pages/Landing'
 import Workers from './pages/Workers'
+import QuickFind from './pages/QuickFind'
 import WorkerProfile from './pages/WorkerProfile'
 import MyServices from './pages/MyServices'
 import Account from './pages/Account'
@@ -25,6 +26,7 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Landing />} />
+        <Route path="find/:slug" element={<QuickFind />} />
         <Route path="workers" element={<Workers />} />
         <Route path="workers/:id" element={<WorkerProfile />} />
         <Route path="signin" element={<SignIn />} />
