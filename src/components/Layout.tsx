@@ -30,7 +30,8 @@ export default function Layout() {
               <option value="en">EN</option><option value="si">සිං</option><option value="ta">த</option></select>
             {session ? <div className="hidden md:block"><button onClick={signOut} className={`${btnSecondary} !min-h-10 text-sm`}>Sign out</button></div>
               : <><Link to="/signin" className="hidden min-h-11 items-center px-4 text-sm font-medium md:inline-flex">{t('nav.signin')}</Link>
-                  <Link to="/signup" className={`${btnPrimary} !min-h-10 text-sm`}>{t('nav.create')}</Link></>}
+                  <div className="hidden md:block"><Link to="/signup" className={`${btnPrimary} !min-h-10 text-sm`}>{t('nav.create')}</Link></div>
+                  <div className="md:hidden"><Link to="/signup" className={`${btnPrimary} !min-h-10 whitespace-nowrap px-4 text-sm`}>{t('nav.join')}</Link></div></>}
           </div>
         </div>
       </header>

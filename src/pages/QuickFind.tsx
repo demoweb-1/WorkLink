@@ -6,7 +6,8 @@ import { useAuth } from '../lib/auth'
 import { useI18n } from '../lib/i18n'
 import { DISTRICTS, lkr } from '../lib/constants'
 import { iconFor } from '../lib/icons'
-import { btnSecondary, cardCls, inputCls } from '../lib/ui'
+import { btnSecondary, cardCls } from '../lib/ui'
+import DistrictChip from '../components/DistrictChip'
 import { getDistrict, pushRecent, setDistrictPref } from '../lib/recent'
 
 type Contact = { phone: string; whatsapp: boolean }
@@ -17,7 +18,7 @@ type Row = {
 }
 type Worker = { row: Row; contact: Contact | null; avg: number; n: number }
 const SELECT = 'id,worker_id,service_title,indicative_price,price_type,profiles!inner(display_name,worker_contacts(phone,whatsapp)),service_categories!inner(name,slug,icon_name)'
-const big = 'inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full text-lg font-semibold transition duration-150 active:scale-[0.97]'
+const big = 'inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full text-lg font-semibold transition duration-150 active:scale-[0.97]'
 
 
 export default function QuickFind() {
@@ -64,10 +65,8 @@ export default function QuickFind() {
   return (
     <div className="max-w-2xl">
       <Link to="/" className="inline-flex min-h-11 items-center text-brand">&lsaquo; {t('find.back')}</Link>
-      <h1 className="mt-2 flex items-center gap-3 text-4xl font-bold tracking-tight"><span className="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand"><Icon size={26} aria-hidden /></span>{name}</h1>
-      <label className="mt-6 block text-sm font-medium">{t('find.where')}
-        <select value={district} onChange={e => pick(e.target.value)} className={`${inputCls} !min-h-14 text-lg font-semibold`}>
-          <option value="">{t('find.all')}</option>{DISTRICTS.map(d => <option key={d}>{d}</option>)}</select></label>
+      <h1 className="mt-2 flex items-center gap-3 text-4xl font-bold tracking-tight"><span className="app-icon grid size-12 shrink-0 place-items-center"><Icon size={26} aria-hidden /></span>{name}</h1>
+      <div className="mt-5"><DistrictChip value={district} onChange={pick} /></div>
 
       <div className="mt-6 space-y-4" aria-live="polite">
         {error && <p role="alert" className="text-error">{error}</p>}
@@ -82,7 +81,7 @@ export default function QuickFind() {
             <p className="mt-3 flex flex-wrap items-center gap-x-3 text-base">
               <span className="font-semibold">{row.indicative_price != null && row.price_type !== 'contact' ? `${t('price.from')} ${lkr(Number(row.indicative_price))}` : t('price.contact')}</span>
               {n > 0 ? <span className="inline-flex items-center gap-1"><Star size={16} className="fill-current" aria-hidden />{avg.toFixed(1)} <span className="text-muted">({n})</span></span> : <span className="text-muted">{t('find.new')}</span>}</p>
-            <div className="mt-4 space-y-2">
+            <div className="mt-4 flex gap-2">
               {contact ? <>
                 <a href={`tel:${contact.phone}`} className={`${big} bg-brand text-white active:bg-brand-dark`}><Phone size={22} aria-hidden />{t('btn.call')}</a>
                 {contact.whatsapp && <a href={`https://wa.me/${contact.phone.slice(1)}`} target="_blank" rel="noopener noreferrer" className={`${big} border border-line bg-white`}><MessageCircle size={22} aria-hidden />{t('btn.whatsapp')}</a>}
