@@ -31,7 +31,7 @@ export default function Account() {
           <option value="">Not set</option>{DISTRICTS.map(d => <option key={d}>{d}</option>)}</select></label>
       </section>
       <section className={`${cardCls} space-y-3 p-5`}>
-        <label className={labelCls}>Phone number<input value={phone} onChange={e => setPhone(e.target.value)} inputMode="tel" placeholder="0771234567" className={inputCls} /></label>
+        <label className={labelCls}>Phone number<input name="phone" autoComplete="tel" value={phone} onChange={e => setPhone(e.target.value)} inputMode="tel" placeholder="0771234567…" className={inputCls} /></label>
         <p className="text-sm text-muted">Only the other person in a confirmed booking can see this.</p>
         <button onClick={savePhone} className={btnSecondary}>Save phone number</button>
       </section>

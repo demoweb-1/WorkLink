@@ -66,11 +66,11 @@ export default function PostJob() {
       <p className="mt-2 text-muted">Describe what you need. Workers send offers and you choose.</p>
       <form onSubmit={toReview} className={`${cardCls} mt-6 space-y-4 p-5`} noValidate>
         <label className={labelCls}>Service<select value={v.category} onChange={set('category')} className={inputCls}><option value="" disabled>Choose a service</option>{cats.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
-        <label className={labelCls}>Job title<input value={v.title} onChange={set('title')} maxLength={120} placeholder="Fix leaking kitchen tap" className={inputCls} /></label>
+        <label className={labelCls}>Job title<input value={v.title} onChange={set('title')} maxLength={120} placeholder="Fix leaking kitchen tap…" className={inputCls} /></label>
         <label className={labelCls}>Description<textarea value={v.description} onChange={set('description')} maxLength={3000} rows={5} placeholder="What needs doing, any materials, and how urgent it is." className={`${inputCls} py-2`} /></label>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className={labelCls}>District<select value={v.district} onChange={set('district')} className={inputCls}><option value="" disabled>Choose a district</option>{DISTRICTS.map(d => <option key={d}>{d}</option>)}</select></label>
-          <label className={labelCls}>Area or town (optional)<input value={v.area} onChange={set('area')} maxLength={80} placeholder="Nugegoda" className={inputCls} /></label>
+          <label className={labelCls}>Area or town (optional)<input value={v.area} onChange={set('area')} maxLength={80} placeholder="Nugegoda…" className={inputCls} /></label>
         </div>
         <label className={labelCls}>Budget<select value={v.btype} onChange={set('btype')} className={inputCls}><option value="negotiable">Negotiable</option><option value="fixed">Fixed amount</option><option value="range">Range</option></select></label>
         {v.btype !== 'negotiable' && <div className="grid gap-4 sm:grid-cols-2">

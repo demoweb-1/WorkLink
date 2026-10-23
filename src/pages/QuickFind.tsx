@@ -7,6 +7,7 @@ import { useI18n } from '../lib/i18n'
 import { DISTRICTS, lkr } from '../lib/constants'
 import { iconFor } from '../lib/icons'
 import { btnSecondary, cardCls, inputCls } from '../lib/ui'
+import { getDistrict, pushRecent, setDistrictPref } from '../lib/recent'
 
 type Contact = { phone: string; whatsapp: boolean }
 type Row = {
@@ -18,13 +19,12 @@ type Worker = { row: Row; contact: Contact | null; avg: number; n: number }
 const SELECT = 'id,worker_id,service_title,indicative_price,price_type,profiles!inner(display_name,worker_contacts(phone,whatsapp)),service_categories!inner(name,slug,icon_name)'
 const big = 'inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full text-lg font-semibold transition duration-150 active:scale-[0.97]'
 
-function savedDistrict() { try { return localStorage.getItem('wl_district') ?? '' } catch { return '' } }
 
 export default function QuickFind() {
   const { slug } = useParams()
   const { profile } = useAuth()
   const { t, catName } = useI18n()
-  const [district, setDistrict] = useState(savedDistrict)
+  const [district, setDistrict] = useState(getDistrict)
   const [list, setList] = useState<Worker[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [title, setTitle] = useState<{ name: string; icon: string | null } | null>(null)
@@ -56,7 +56,8 @@ export default function QuickFind() {
     return () => { stale = true }
   }, [slug, district])
 
-  function pick(d: string) { setDistrict(d); try { localStorage.setItem('wl_district', d) } catch { /* ignore */ } }
+  function pick(d: string) { setDistrict(d); setDistrictPref(d) }
+  useEffect(() => { if (slug) pushRecent(slug) }, [slug])
   const Icon = iconFor(title?.icon ?? null)
   const name = catName(slug!, title?.name ?? '')
 

@@ -58,7 +58,7 @@ export function SignUp() {
   if (sent) return <Shell title="Check your email"><p className="text-muted">We sent a confirmation link. Open it, then sign in.</p></Shell>
   return <Shell title="Create account">
     <form onSubmit={submit} className="space-y-4">
-      <label className="block text-sm font-medium">Your name<input name="name" required minLength={2} maxLength={60} className={input} /></label>
+      <label className="block text-sm font-medium">Your name<input name="name" autoComplete="name" required minLength={2} maxLength={60} className={input} /></label>
       <label className="block text-sm font-medium">Email<input name="email" type="email" required autoComplete="email" className={input} /></label>
       <label className="block text-sm font-medium">Password (8+ characters)<input name="password" type="password" required minLength={8} autoComplete="new-password" className={input} /></label>
       <label className="flex min-h-11 items-center gap-2 text-sm"><input name="worker" type="checkbox" className="size-5" /> I also want to offer my services as a worker</label>

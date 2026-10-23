@@ -66,7 +66,7 @@ export default function MyServices() {
       <section aria-labelledby="ct" className={`${cardCls} space-y-3 p-5`}>
         <h2 id="ct" className="text-xl font-bold">Let customers call you</h2>
         <p className="text-sm text-muted">This number will be visible to everyone who views your listings. Only add it if you are happy for anyone to call you.</p>
-        <label className={labelCls}>Phone number<input value={cPhone} onChange={e => setCPhone(e.target.value)} inputMode="tel" placeholder="0771234567" className={inputCls} /></label>
+        <label className={labelCls}>Phone number<input name="phone" autoComplete="tel" value={cPhone} onChange={e => setCPhone(e.target.value)} inputMode="tel" placeholder="0771234567…" className={inputCls} /></label>
         <label className="flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" checked={cWa} onChange={e => setCWa(e.target.checked)} className="size-5" /> Customers can also message me on WhatsApp</label>
         {cMsg && <p role="status" className="pop text-sm">{cMsg}</p>}
         <div className="flex flex-wrap gap-3"><button onClick={saveContact} className={btnPrimary}>Save number</button>{hasContact && <button onClick={removeContact} className={btnDanger}>Stop showing my number</button>}</div>
@@ -82,7 +82,7 @@ export default function MyServices() {
         <h2 id="add" className="text-xl font-bold">Add a service</h2>
         <form ref={form} onSubmit={add} className={`${cardCls} mt-3 space-y-4 p-5`}>
           <label className={labelCls}>Category<select name="category" className={inputCls} defaultValue=""><option value="" disabled>Choose a category</option>{cats.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
-          <label className={labelCls}>Service title<input name="title" maxLength={80} placeholder="House wiring and repairs" className={inputCls} /></label>
+          <label className={labelCls}>Service title<input name="title" maxLength={80} placeholder="House wiring and repairs…" className={inputCls} /></label>
           <label className={labelCls}>Description (optional)<textarea name="description" maxLength={600} rows={3} className={`${inputCls} py-2`} /></label>
           <div className="grid gap-4 sm:grid-cols-3">
             <label className={labelCls}>Price type<select value={type} onChange={e => setType(e.target.value)} className={inputCls}><option value="fixed">Fixed price</option><option value="hourly">Per hour</option><option value="daily">Per day</option><option value="contact">Contact for price</option></select></label>

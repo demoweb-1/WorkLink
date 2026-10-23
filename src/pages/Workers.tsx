@@ -55,7 +55,7 @@ export default function Workers() {
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         <label className={`${labelCls} sm:col-span-3`}>Search
           <span className="relative block"><Search size={18} className="pointer-events-none absolute left-3.5 top-1/2 mt-[3px] -translate-y-1/2 text-muted" aria-hidden />
-            <input type="search" value={q} onChange={e => setQ(e.target.value)} placeholder="Electrician, cleaning, painting" className={`${inputCls} pl-10`} /></span></label>
+            <input type="search" name="q" autoComplete="off" spellCheck={false} value={q} onChange={e => setQ(e.target.value)} placeholder="Electrician, cleaning, painting…" className={`${inputCls} pl-10`} /></span></label>
         <label className={labelCls}>Service<select value={cat} onChange={e => setParam('category', e.target.value)} className={inputCls}>
           <option value="">All services</option>{cats.map(c => <option key={c.id} value={c.slug}>{c.name}</option>)}</select></label>
         <label className={labelCls}>District<select value={district} onChange={e => setParam('district', e.target.value)} className={inputCls}>

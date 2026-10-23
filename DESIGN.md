@@ -24,3 +24,13 @@ System stack first (SF Pro on Apple devices), Inter next, then Noto Sans Sinhala
 
 ## 5. Layout and motion
 Max width 1024px, 8-point spacing, left-aligned content. One page-load reveal on the landing hero; everything else animates only in response to a tap. All motion is removed under reduced-motion.
+
+## 6. Everyday-app patterns (inspired by PickMe's ease of use, not its branding)
+- Home answers one question: "What do you need today?" A time-based greeting and the user's first name sit above it.
+- A large district pill (like a pickup-location chip) and a search field come first. The district choice is remembered and carries into every service screen.
+- Services are a 3-column grid of big icon tiles with short labels (two lines at most). Tapping a tile goes straight to workers; no forms.
+- A "Recent" row of chips lets people repeat the last services they opened.
+- Banner cards (Post a job, Join as a worker, Browse all) scroll sideways on phones and sit in a grid on desktop. Each has a real destination.
+- Worker cards lead with the action: full-width Call and WhatsApp buttons, 56px tall.
+- Sinhala and Tamil are one tap away in the header.
+- No video or heavy imagery: pages must stay fast on slow mobile data.
