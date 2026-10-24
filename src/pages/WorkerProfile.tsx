@@ -70,7 +70,7 @@ export default function WorkerProfile() {
                   <a href={`tel:${contact.phone}`} onClick={() => recordContact({ worker_id: id!, name: p.display_name, service: s.service_title }, session?.user.id, 'call')} className="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full bg-brand font-semibold text-white active:scale-[0.97]"><Phone size={20} aria-hidden />{t('btn.call')}</a>
                   {contact.whatsapp && <a href={`https://wa.me/${contact.phone.slice(1)}`} target="_blank" rel="noopener noreferrer" onClick={() => recordContact({ worker_id: id!, name: p.display_name, service: s.service_title }, session?.user.id, 'whatsapp')} className="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full border border-line bg-white font-semibold active:scale-[0.97]"><MessageCircle size={20} aria-hidden />{t('btn.whatsapp')}</a>}</div>
                   : <p className="text-sm text-muted">This worker has not added a phone number yet.</p>}
-                <Link to={`/jobs/new?category=${s.category_id}`} className={`${btnSecondary} w-full`}>Post a job for this service</Link>
+                <Link to={`/request/${s.service_categories?.slug ?? ''}`} className={`${btnSecondary} w-full`}>{t('rq.cta')}</Link>
               </div>}</li>) })}</ul>}
       </section>
       <section aria-labelledby="r"><h2 id="r" className="text-xl font-bold">Reviews</h2>
@@ -79,6 +79,5 @@ export default function WorkerProfile() {
             <p className="font-medium">{r.reviewer?.display_name ?? 'Customer'} <span className="font-normal text-muted">· {r.rating} out of 5{r.source === 'booking' ? ' · Booked in WorkLink' : ' · Contacted via WorkLink'}</span></p>
             {r.comment && <p className="mt-1 text-muted">{r.comment}</p>}</li>))}</ul>}
       </section>
-      <p className="rounded-2xl bg-subtle p-4 text-sm text-muted">Booking requests are coming soon. Prices shown are indicative. Payment is arranged directly with the worker.</p>
     </div>)
 }

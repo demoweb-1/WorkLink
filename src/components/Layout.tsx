@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Home, Search, Briefcase, CalendarCheck, User, LogIn, PhoneIncoming } from 'lucide-react'
 import { useAuth } from '../lib/auth'
-import { BRAND } from '../lib/constants'
+import { ADVANCED_JOBS, BRAND } from '../lib/constants'
 import { btnPrimary, btnSecondary } from '../lib/ui'
 import { useI18n, type Lang } from '../lib/i18n'
 import GlassNav, { type NavItem } from './GlassNav'
@@ -14,7 +14,7 @@ export default function Layout() {
   const items: NavItem[] = [
     { to: '/', label: t('nav.home'), icon: Home, end: true },
     session && profile?.is_worker ? { to: '/requests', label: t('nav.requests'), icon: PhoneIncoming } : { to: '/workers', label: t('nav.workers'), icon: Search },
-    ...(session ? [{ to: '/jobs', label: t('nav.jobs'), icon: Briefcase }, { to: '/bookings', label: t('nav.bookings'), icon: CalendarCheck }] : []),
+    ...(session && ADVANCED_JOBS ? [{ to: '/jobs', label: t('nav.jobs'), icon: Briefcase }, { to: '/bookings', label: t('nav.bookings'), icon: CalendarCheck }] : []),
     ...(session ? [{ to: '/account', label: t('nav.account'), icon: User }] : [{ to: '/signin', label: t('nav.signin'), icon: LogIn }]),
   ]
   const topItems = items.filter(i => i.to !== '/signin')

@@ -1,4 +1,7 @@
 export const BRAND = 'WorkLink' // change the product name here
+// The long flow (post a job, compare offers, bookings) is switched off for customers to keep things to 2-4 taps.
+// Set to true to bring the Jobs and Bookings tabs and routes back.
+export const ADVANCED_JOBS = false
 export const DISTRICTS = ['Ampara','Anuradhapura','Badulla','Batticaloa','Colombo','Galle','Gampaha','Hambantota','Jaffna','Kalutara','Kandy','Kegalle','Kilinochchi','Kurunegala','Mannar','Matale','Matara','Monaragala','Mullaitivu','Nuwara Eliya','Polonnaruwa','Puttalam','Ratnapura','Trincomalee','Vavuniya']
 export const lkr = (n: number) => 'Rs. ' + n.toLocaleString('en-LK')
 const UNIT: Record<string, string> = { hourly: ' per hour', daily: ' per day', fixed: ' fixed' }
