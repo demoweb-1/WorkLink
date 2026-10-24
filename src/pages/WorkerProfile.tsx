@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { MapPin, MessageCircle, Phone, Star } from 'lucide-react'
+import { ChevronDown, MapPin, MessageCircle, Phone, Star } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import { useI18n } from '../lib/i18n'
 import { recordContact } from '../lib/contacted'
 import { supabase } from '../lib/supabase'
 import { priceText, type Listing } from '../lib/constants'
-import { cardCls } from '../lib/ui'
+import { btnSecondary, cardCls } from '../lib/ui'
 
 type Review = { id: string; rating: number; comment: string | null; created_at: string; source: string; reviewer: { display_name: string } | null }
 type P = { display_name: string; district: string | null; public_bio: string | null; is_worker: boolean }
@@ -17,7 +17,8 @@ export default function WorkerProfile() {
   const { t } = useI18n()
   const [contact, setContact] = useState<{ phone: string; whatsapp: boolean } | null>(null)
   const [p, setP] = useState<P | null | undefined>(undefined)
-  const [svcs, setSvcs] = useState<Listing[]>([])
+  const [svcs, setSvcs] = useState<(Listing & { category_id: string })[]>([])
+  const [open, setOpen] = useState<string | null>(null)
   const [reviews, setReviews] = useState<Review[]>([])
   const [error, setError] = useState<string | null>(null)
   useEffect(() => {
@@ -26,8 +27,8 @@ export default function WorkerProfile() {
       const a = await supabase.from('profiles').select('display_name,district,public_bio,is_worker').eq('id', id).maybeSingle()
       if (a.error) return setError('Could not load this profile. Check your connection and try again.')
       setP(a.data as P | null)
-      const b = await supabase.from('worker_services').select('id,worker_id,service_title,description,indicative_price,price_type,service_areas,years_experience,service_categories(name,slug,icon_name)').eq('worker_id', id).eq('is_active', true)
-      setSvcs((b.data ?? []) as unknown as Listing[])
+      const b = await supabase.from('worker_services').select('id,worker_id,category_id,service_title,description,indicative_price,price_type,service_areas,years_experience,service_categories(name,slug,icon_name)').eq('worker_id', id).eq('is_active', true)
+      setSvcs((b.data ?? []) as unknown as (Listing & { category_id: string })[])
       const c = await supabase.from('reviews').select('id,rating,comment,created_at,source,reviewer:profiles!reviewer_id(display_name)').eq('reviewee_id', id).order('created_at', { ascending: false }).limit(50)
       setReviews((c.data ?? []) as unknown as Review[])
       const d = await supabase.from('worker_contacts').select('phone,whatsapp').eq('worker_id', id).maybeSingle()
@@ -53,12 +54,24 @@ export default function WorkerProfile() {
       {p.public_bio && <p className="max-w-prose">{p.public_bio}</p>}
       <section aria-labelledby="s"><h2 id="s" className="text-xl font-bold">Services</h2>
         {svcs.length === 0 ? <p className="mt-3 text-muted">This worker has no active services right now.</p> :
-          <ul className="mt-3 grid gap-3 md:grid-cols-2">{svcs.map(s => (
-            <li key={s.id} className={`${cardCls} p-4`}><p className="text-sm text-muted">{s.service_categories?.name}</p><p className="font-semibold">{s.service_title}</p>
-              {s.description && <p className="mt-2 text-sm text-muted">{s.description}</p>}
-              {s.service_areas.length > 0 && <p className="mt-2 text-sm text-muted">Serves {s.service_areas.join(', ')}</p>}
-              {s.years_experience != null && <p className="text-sm text-muted">{s.years_experience} years of experience</p>}
-              <p className="mt-2 font-semibold">{priceText(s.indicative_price, s.price_type)}</p></li>))}</ul>}
+          <ul className="mt-3 grid items-start gap-3 md:grid-cols-2">{svcs.map(s => { const isOpen = open === s.id; return (
+            <li key={s.id} className={`${cardCls} overflow-hidden`}>
+              <button type="button" aria-expanded={isOpen} aria-controls={`svc-${s.id}`} onClick={() => setOpen(isOpen ? null : s.id)}
+                className="flex min-h-20 w-full items-center justify-between gap-3 p-4 text-left transition-colors duration-150 active:bg-subtle">
+                <span className="min-w-0"><span className="block text-sm text-muted">{s.service_categories?.name}</span>
+                  <span className="block font-semibold">{s.service_title}</span>
+                  <span className="mt-1 block font-semibold text-brand">{priceText(s.indicative_price, s.price_type)}</span></span>
+                <ChevronDown size={22} aria-hidden className={`shrink-0 text-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} /></button>
+              {isOpen && <div id={`svc-${s.id}`} className="pop space-y-3 border-t border-line p-4">
+                {s.description && <p className="text-muted">{s.description}</p>}
+                {s.service_areas.length > 0 && <p className="text-sm"><span className="text-muted">Serves </span>{s.service_areas.join(', ')}</p>}
+                {s.years_experience != null && <p className="text-sm"><span className="text-muted">Experience </span>{s.years_experience} years</p>}
+                {contact ? <div className="flex gap-2">
+                  <a href={`tel:${contact.phone}`} onClick={() => recordContact({ worker_id: id!, name: p.display_name, service: s.service_title }, session?.user.id, 'call')} className="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full bg-brand font-semibold text-white active:scale-[0.97]"><Phone size={20} aria-hidden />{t('btn.call')}</a>
+                  {contact.whatsapp && <a href={`https://wa.me/${contact.phone.slice(1)}`} target="_blank" rel="noopener noreferrer" onClick={() => recordContact({ worker_id: id!, name: p.display_name, service: s.service_title }, session?.user.id, 'whatsapp')} className="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full border border-line bg-white font-semibold active:scale-[0.97]"><MessageCircle size={20} aria-hidden />{t('btn.whatsapp')}</a>}</div>
+                  : <p className="text-sm text-muted">This worker has not added a phone number yet.</p>}
+                <Link to={`/jobs/new?category=${s.category_id}`} className={`${btnSecondary} w-full`}>Post a job for this service</Link>
+              </div>}</li>) })}</ul>}
       </section>
       <section aria-labelledby="r"><h2 id="r" className="text-xl font-bold">Reviews</h2>
         {reviews.length === 0 ? <p className="mt-3 text-muted">No reviews yet. Reviews appear only after a completed job.</p> :

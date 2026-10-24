@@ -1,5 +1,5 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth'
 import { DISTRICTS, type Cat } from '../lib/constants'
@@ -12,7 +12,8 @@ const empty: V = { category: '', title: '', description: '', district: '', area:
 export default function PostJob() {
   const { session } = useAuth()
   const [cats, setCats] = useState<Cat[]>([])
-  const [v, setV] = useState<V>(empty)
+  const [params] = useSearchParams()
+  const [v, setV] = useState<V>({ ...empty, category: params.get('category') ?? '' })
   const [step, setStep] = useState<'form' | 'review' | 'done'>('form')
   const [err, setErr] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
