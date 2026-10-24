@@ -8,6 +8,7 @@ import { DISTRICTS, lkr } from '../lib/constants'
 import { iconFor } from '../lib/icons'
 import { btnSecondary, cardCls } from '../lib/ui'
 import DistrictChip from '../components/DistrictChip'
+import { recordContact } from '../lib/contacted'
 import { getDistrict, pushRecent, setDistrictPref } from '../lib/recent'
 
 type Contact = { phone: string; whatsapp: boolean }
@@ -23,7 +24,7 @@ const big = 'inline-flex min-h-14 flex-1 items-center justify-center gap-2 round
 
 export default function QuickFind() {
   const { slug } = useParams()
-  const { profile } = useAuth()
+  const { profile, session } = useAuth()
   const { t, catName } = useI18n()
   const [district, setDistrict] = useState(getDistrict)
   const [list, setList] = useState<Worker[] | null>(null)
@@ -83,8 +84,8 @@ export default function QuickFind() {
               {n > 0 ? <span className="inline-flex items-center gap-1"><Star size={16} className="fill-current" aria-hidden />{avg.toFixed(1)} <span className="text-muted">({n})</span></span> : <span className="text-muted">{t('find.new')}</span>}</p>
             <div className="mt-4 flex gap-2">
               {contact ? <>
-                <a href={`tel:${contact.phone}`} className={`${big} bg-brand text-white active:bg-brand-dark`}><Phone size={22} aria-hidden />{t('btn.call')}</a>
-                {contact.whatsapp && <a href={`https://wa.me/${contact.phone.slice(1)}`} target="_blank" rel="noopener noreferrer" className={`${big} border border-line bg-white`}><MessageCircle size={22} aria-hidden />{t('btn.whatsapp')}</a>}
+                <a href={`tel:${contact.phone}`} onClick={() => recordContact({ worker_id: row.worker_id, name: row.profiles?.display_name ?? '', service: row.service_title }, session?.user.id, 'call')} className={`${big} bg-brand text-white active:bg-brand-dark`}><Phone size={22} aria-hidden />{t('btn.call')}</a>
+                {contact.whatsapp && <a href={`https://wa.me/${contact.phone.slice(1)}`} target="_blank" rel="noopener noreferrer" onClick={() => recordContact({ worker_id: row.worker_id, name: row.profiles?.display_name ?? '', service: row.service_title }, session?.user.id, 'whatsapp')} className={`${big} border border-line bg-white`}><MessageCircle size={22} aria-hidden />{t('btn.whatsapp')}</a>}
               </> : <Link to={`/workers/${row.worker_id}`} className={`${btnSecondary} !min-h-14 w-full text-lg`}>{t('btn.profile')}</Link>}
             </div>
           </article>))}

@@ -5,6 +5,7 @@ import { BRAND } from '../lib/constants'
 import { btnPrimary, btnSecondary } from '../lib/ui'
 import { useI18n, type Lang } from '../lib/i18n'
 import GlassNav, { type NavItem } from './GlassNav'
+import ReviewPrompt from './ReviewPrompt'
 
 export default function Layout() {
   const { session, signOut } = useAuth()
@@ -40,5 +41,6 @@ export default function Layout() {
         <footer className="mt-16 border-t border-line pt-6 text-sm text-muted">Payment is arranged directly between customers and workers. {BRAND} does not collect or guarantee payment.</footer>
       </main>
       <GlassNav items={items} variant="bottom" />
+      <ReviewPrompt />
     </div>)
 }
