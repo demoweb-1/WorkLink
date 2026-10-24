@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Briefcase, ChevronRight, HardHat, Search, Users } from 'lucide-react'
+import { ChevronRight, HardHat, PhoneIncoming, Search, Users } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth'
 import { useI18n } from '../lib/i18n'
@@ -58,7 +58,7 @@ export default function Landing() {
 
       <section aria-label="More" className="-mx-4">
         <ul className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-3 sm:grid sm:grid-cols-3 sm:overflow-visible">
-          {[{ to: '/jobs/new', label: t('home.post'), icon: Briefcase, cls: 'tone-blue', ic: 'text-lime' },
+          {[{ to: '/request', label: t('rq.cta'), icon: PhoneIncoming, cls: 'tone-blue', ic: 'text-lime' },
             { to: '/signup', label: t('home.join'), icon: HardHat, cls: 'tone-night', ic: 'text-lime' },
             { to: '/workers', label: t('home.browse'), icon: Users, cls: 'tone-lime', ic: 'text-ink' }].map(c => (
             <li key={c.to} className="w-[74%] shrink-0 snap-start sm:w-auto">

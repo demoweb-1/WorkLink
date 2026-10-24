@@ -10,7 +10,7 @@ html{-webkit-text-size-adjust:100%}
 body{background:var(--color-bg);color:var(--color-ink);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 :focus-visible{outline:2px solid var(--color-brand);outline-offset:2px}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.rise{animation:rise .32s cubic-bezier(.22,1,.36,1) both}
+.rise{animation:rise .32s cubic-bezier(.22,1,.36,1) backwards}
 .rise-2{animation-delay:.08s}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 
@@ -35,8 +35,8 @@ body{background:var(--color-bg);color:var(--color-ink);font-family:var(--font-sa
   background:radial-gradient(55% 70% at 15% 0%,rgba(37,99,235,.16),transparent 70%),radial-gradient(40% 55% at 92% 4%,rgba(183,243,107,.32),transparent 70%)}
 /* ---------- Motion ---------- */
 @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
-.pop{animation:pop .3s cubic-bezier(.22,1,.36,1) both}
-.page-enter{animation:pop .24s cubic-bezier(.22,1,.36,1) both}
+.pop{animation:pop .3s cubic-bezier(.22,1,.36,1) backwards}
+.page-enter{animation:pop .24s cubic-bezier(.22,1,.36,1) backwards}
 .rise-3{animation-delay:.16s}
 
 /* ---------- Web Interface Guidelines fixes ---------- */

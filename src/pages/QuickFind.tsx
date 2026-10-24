@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { MessageCircle, Phone, Star } from 'lucide-react'
+import { MessageCircle, Phone, PhoneIncoming, Star } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth'
 import { useI18n } from '../lib/i18n'
@@ -64,7 +64,7 @@ export default function QuickFind() {
   const name = catName(slug!, title?.name ?? '')
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl pb-24">
       <Link to="/" className="inline-flex min-h-11 items-center text-brand">&lsaquo; {t('find.back')}</Link>
       <h1 className="mt-2 flex items-center gap-3 text-4xl font-bold tracking-tight"><span className="app-icon grid size-12 shrink-0 place-items-center"><Icon size={26} aria-hidden /></span>{name}</h1>
       <div className="mt-5"><DistrictChip value={district} onChange={pick} /></div>
@@ -90,5 +90,6 @@ export default function QuickFind() {
             </div>
           </article>))}
       </div>
+      <Link to={`/request/${slug}`} className="fixed inset-x-4 bottom-[calc(env(safe-area-inset-bottom)+5.75rem)] z-20 mx-auto flex min-h-14 max-w-md items-center justify-center gap-2 rounded-full bg-night text-lg font-semibold text-white shadow-[0_12px_30px_-8px_rgba(11,18,32,.6)] transition-transform active:scale-[0.97] md:bottom-6"><PhoneIncoming size={22} className="text-lime" aria-hidden />{t('rq.cta')}</Link>
     </div>)
 }

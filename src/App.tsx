@@ -5,6 +5,8 @@ import Layout from './components/Layout'
 import Landing from './pages/Landing'
 import Workers from './pages/Workers'
 import QuickFind from './pages/QuickFind'
+import RequestPage from './pages/RequestPage'
+import Requests from './pages/Requests'
 import WorkerProfile from './pages/WorkerProfile'
 import MyServices from './pages/MyServices'
 import Account from './pages/Account'
@@ -27,6 +29,9 @@ export default function App() {
       <Route element={<Layout />}>
         <Route index element={<Landing />} />
         <Route path="find/:slug" element={<QuickFind />} />
+        <Route path="request" element={<RequestPage />} />
+        <Route path="request/:slug" element={<RequestPage />} />
+        <Route path="requests" element={<Protected><Requests /></Protected>} />
         <Route path="workers" element={<Workers />} />
         <Route path="workers/:id" element={<WorkerProfile />} />
         <Route path="signin" element={<SignIn />} />
