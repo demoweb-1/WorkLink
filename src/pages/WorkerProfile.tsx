@@ -76,7 +76,7 @@ export default function WorkerProfile() {
       <section aria-labelledby="r"><h2 id="r" className="text-xl font-bold">Reviews</h2>
         {reviews.length === 0 ? <p className="mt-3 text-muted">No reviews yet. Reviews appear only after a completed job.</p> :
           <ul className="mt-3 space-y-3">{reviews.map(r => (<li key={r.id} className={`${cardCls} p-4`}>
-            <p className="font-medium">{r.reviewer?.display_name ?? 'Customer'} <span className="font-normal text-muted">· {r.rating} out of 5{r.source === 'booking' ? ' · Booked in WorkLink' : ' · Contacted via WorkLink'}</span></p>
+            <p className="font-medium">{r.reviewer?.display_name ?? 'Customer'} <span className="font-normal text-muted">· {r.rating} out of 5{r.source === 'booking' ? ' · Booked in Mithra' : ' · Contacted via Mithra'}</span></p>
             {r.comment && <p className="mt-1 text-muted">{r.comment}</p>}</li>))}</ul>}
       </section>
     </div>)

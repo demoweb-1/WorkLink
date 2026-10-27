@@ -90,6 +90,6 @@ export default function QuickFind() {
             </div>
           </article>))}
       </div>
-      <Link to={`/request/${slug}`} className="fixed inset-x-4 bottom-[calc(env(safe-area-inset-bottom)+5.75rem)] z-20 mx-auto flex min-h-14 max-w-md items-center justify-center gap-2 rounded-full bg-night text-lg font-semibold text-white shadow-[0_12px_30px_-8px_rgba(11,18,32,.6)] transition-transform active:scale-[0.97] md:bottom-6"><PhoneIncoming size={22} className="text-lime" aria-hidden />{t('rq.cta')}</Link>
+      <Link to={`/request/${slug}`} className="fixed inset-x-4 bottom-[calc(env(safe-area-inset-bottom)+5.75rem)] z-20 mx-auto flex min-h-14 max-w-md items-center justify-center gap-2 rounded-full bg-night text-lg font-semibold text-white shadow-[0_12px_30px_-8px_rgba(11,18,32,.6)] transition-transform active:scale-[0.97] md:bottom-6"><PhoneIncoming size={22} className="text-amber" aria-hidden />{t('rq.cta')}</Link>
     </div>)
 }

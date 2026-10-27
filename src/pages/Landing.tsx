@@ -58,9 +58,9 @@ export default function Landing() {
 
       <section aria-label="More" className="-mx-4">
         <ul className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-3 sm:grid sm:grid-cols-3 sm:overflow-visible">
-          {[{ to: '/request', label: t('rq.cta'), icon: PhoneIncoming, cls: 'tone-blue', ic: 'text-lime' },
-            { to: '/signup', label: t('home.join'), icon: HardHat, cls: 'tone-night', ic: 'text-lime' },
-            { to: '/workers', label: t('home.browse'), icon: Users, cls: 'tone-lime', ic: 'text-ink' }].map(c => (
+          {[{ to: '/request', label: t('rq.cta'), icon: PhoneIncoming, cls: 'tone-navy', ic: 'text-amber' },
+            { to: '/signup', label: t('home.join'), icon: HardHat, cls: 'tone-amber', ic: 'text-ink' },
+            { to: '/workers', label: t('home.browse'), icon: Users, cls: 'tone-soft', ic: 'text-brand' }].map(c => (
             <li key={c.to} className="w-[74%] shrink-0 snap-start sm:w-auto">
               <Link to={c.to} className={`${c.cls} flex min-h-32 flex-col justify-between rounded-[28px] p-5 transition-transform duration-150 active:scale-[0.97]`}>
                 <c.icon size={30} className={c.ic} aria-hidden />

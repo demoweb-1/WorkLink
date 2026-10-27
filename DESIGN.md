@@ -1,17 +1,15 @@
-# Design System: WorkLink
+# Design System: Mithra
 (Written by hand: the design-md skill needs a Stitch project, which this project does not have.)
 
 ## 1. Atmosphere
 Calm, confident and spacious, in the manner of Apple's Human Interface Guidelines. Content comes first. Only navigation floats above it on a translucent material (header and mobile tab bar). Content surfaces are opaque.
 
-## 2. Colour
-- Canvas Mist (#F8FAFC): page background.
-- Pure Surface (#FFFFFF): cards and inputs.
-- Ink (#111827): primary text. Slate (#64748B): secondary text.
-- WorkLink Blue (#2563EB, pressed #1D4ED8): the single interactive accent: primary buttons, active tab, links.
-- Soft Blue (#EFF6FF): selected chips and quiet highlights.
-- Signature Lime (#B7F36B): tiny moments only (wordmark dot, "open" indicators). Never behind text.
-- Hairline (#E2E8F0), Quiet Fill (#F1F5F9). Semantic: success #15803D, warning #B45309, error #B91C1C.
+## 2. Colour (from the Mithra brand guide)
+- Navy Blue (#0B2D3B): trust and stability. Text, links, primary buttons, active tab, app-icon tiles.
+- Amber (#F6B23C): warmth and friendliness. Logo accent, highlights, one banner card. Used as a fill or icon colour, never as text on white (low contrast).
+- Warm Paper (#F8F6F1): page background. White (#FFFFFF): cards and inputs.
+- Slate (#5E7381): secondary text. Hairline (#E6E1D6), Quiet Fill (#F0ECE3), Navy Tint (#E6EEF1) for selected chips.
+- Semantic: success #15803D, warning #B45309, error #B91C1C.
 
 ## 3. Typography
 System stack first (SF Pro on Apple devices), Inter next, then Noto Sans Sinhala / Tamil. Regular, medium, semibold and bold only; no light weights. Body 16-17px, large title 40-56px with tight tracking, line length under 65 characters.

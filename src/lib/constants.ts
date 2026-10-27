@@ -1,4 +1,4 @@
-export const BRAND = 'WorkLink' // change the product name here
+export const BRAND = 'Mithra' // the product name; Mithra means "friend" in Sinhala
 // The long flow (post a job, compare offers, bookings) is switched off for customers to keep things to 2-4 taps.
 // Set to true to bring the Jobs and Bookings tabs and routes back.
 export const ADVANCED_JOBS = false
