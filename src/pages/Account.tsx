@@ -2,47 +2,45 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth'
+import { useI18n } from '../lib/i18n'
 import { DISTRICTS } from '../lib/constants'
+import { IS_WORKER_APP, WORKER_PATH } from '../lib/app'
+import { normalizePhone } from '../lib/phone'
 import { btnPrimary, btnSecondary, cardCls, inputCls, labelCls } from '../lib/ui'
 
 export default function Account() {
   const { session, profile, refreshProfile, signOut } = useAuth()
+  const { t } = useI18n()
   const [msg, setMsg] = useState<string | null>(null); const [err, setErr] = useState<string | null>(null)
   const [phone, setPhone] = useState('')
   useEffect(() => { if (session) supabase.from('profile_private').select('phone_number').eq('user_id', session.user.id).maybeSingle().then(({ data }) => setPhone(data?.phone_number ?? '')) }, [session])
-  async function savePhone() {
-    const d = phone.replace(/[\s-]/g, '')
-    const n = /^0\d{9}$/.test(d) ? '+94' + d.slice(1) : d
-    if (!/^\+94\d{9}$/.test(n)) return setErr('Enter a Sri Lankan number like 0771234567.')
-    setErr(null); const { error } = await supabase.from('profile_private').upsert({ user_id: session!.user.id, phone_number: n }, { onConflict: 'user_id' })
-    if (error) setErr('Could not save your phone number.'); else { setPhone(n); setMsg('Phone number saved. It is shown only to the other person in a booking.') }
-  }
   if (!profile) return <p className="text-muted">Loading…</p>
-  async function update(patch: Partial<{ is_worker: boolean; district: string | null }>, ok: string) {
+  async function setDistrict(district: string | null) {
     setMsg(null); setErr(null)
-    const { error } = await supabase.from('profiles').update(patch).eq('id', session!.user.id)
-    if (error) setErr('Could not save your changes. Try again.'); else { setMsg(ok); await refreshProfile() }
+    const { error } = await supabase.from('profiles').update({ district }).eq('id', session!.user.id)
+    if (error) setErr('Could not save your changes. Try again.'); else { setMsg('District saved.'); await refreshProfile() }
+  }
+  async function savePhone() {
+    const n = normalizePhone(phone); if (!n) return setErr(t('rq.bad'))
+    setErr(null); const { error } = await supabase.from('profile_private').upsert({ user_id: session!.user.id, phone_number: n }, { onConflict: 'user_id' })
+    if (error) setErr('Could not save your phone number.'); else { setPhone(n); setMsg('Phone number saved.') }
   }
   return (
     <div className="max-w-xl space-y-6">
-      <h1 className="text-4xl font-bold tracking-tight">Hello, {profile.display_name}</h1>
+      <h1 className="text-4xl font-bold tracking-tight">{profile.display_name}</h1>
       <section className={`${cardCls} space-y-4 p-5`}>
-        <label className={labelCls}>Your district<select value={profile.district ?? ''} onChange={e => update({ district: e.target.value || null }, 'District saved.')} className={inputCls}>
+        <label className={labelCls}>{t('find.where')}<select value={profile.district ?? ''} onChange={e => setDistrict(e.target.value || null)} className={inputCls}>
           <option value="">Not set</option>{DISTRICTS.map(d => <option key={d}>{d}</option>)}</select></label>
+        {!IS_WORKER_APP && <>
+          <label className={labelCls}>{t('rq.phone')}<input name="phone" autoComplete="tel" inputMode="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="0771234567…" className={inputCls} /></label>
+          <button onClick={savePhone} className={btnSecondary}>Save phone number</button></>}
       </section>
-      <section className={`${cardCls} space-y-3 p-5`}>
-        <label className={labelCls}>Phone number<input name="phone" autoComplete="tel" value={phone} onChange={e => setPhone(e.target.value)} inputMode="tel" placeholder="0771234567…" className={inputCls} /></label>
-        <p className="text-sm text-muted">Only the other person in a confirmed booking can see this.</p>
-        <button onClick={savePhone} className={btnSecondary}>Save phone number</button>
-      </section>
-      <section className={`${cardCls} p-5`}>
-        <h2 className="font-semibold">Worker mode</h2>
-        <p className="mt-1 text-muted">{profile.is_worker ? 'You can list services and appear in the worker directory.' : 'Turn this on to list your services and be found by customers.'}</p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          {profile.is_worker ? <><Link to="/my-services" className={btnPrimary}>Manage my services</Link><button onClick={() => update({ is_worker: false }, 'Worker mode is off. Your listings are hidden.')} className={btnSecondary}>Turn off</button></>
-            : <button onClick={() => update({ is_worker: true }, 'Worker mode is on.')} className={btnPrimary}>Turn on worker mode</button>}
-        </div>
-      </section>
-      {err && <p role="alert" className="pop text-error">{err}</p>}{msg && <p role="status" className="pop text-success">{msg}</p>}<button onClick={signOut} className={btnSecondary}>Sign out</button>
+      {IS_WORKER_APP
+        ? <section className={`${cardCls} flex flex-wrap gap-3 p-5`}>
+            <Link to="/my-services" className={btnPrimary}>{t('nav.services')}</Link>
+            <Link to={`/workers/${session!.user.id}`} className={btnSecondary}>Preview my public profile</Link></section>
+        : <a href={WORKER_PATH} className="flex min-h-14 items-center justify-between rounded-2xl border border-line bg-white px-4 font-medium active:bg-subtle">{t('home.joinw')}<span aria-hidden>&rsaquo;</span></a>}
+      {err && <p role="alert" className="pop text-error">{err}</p>}{msg && <p role="status" className="pop text-success">{msg}</p>}
+      <button onClick={signOut} className={btnSecondary}>Sign out</button>
     </div>)
 }

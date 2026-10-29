@@ -1,0 +1,1 @@
+{"name":"Mithra Worker","short_name":"Mithra Worker","description":"Get customers calling you","start_url":".","scope":".","display":"standalone","background_color":"#F8F6F1","theme_color":"#F6B23C","icons":[{"src":"icon-192-worker.png","sizes":"192x192","type":"image/png"},{"src":"icon-512-worker.png","sizes":"512x512","type":"image/png"}]}

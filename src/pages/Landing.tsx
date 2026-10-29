@@ -8,6 +8,7 @@ import { iconFor } from '../lib/icons'
 import type { Cat } from '../lib/constants'
 import { getDistrict, getRecent, setDistrictPref } from '../lib/recent'
 import DistrictChip from '../components/DistrictChip'
+import { WORKER_PATH } from '../lib/app'
 
 export default function Landing() {
   const { t, catName } = useI18n()
@@ -58,13 +59,13 @@ export default function Landing() {
 
       <section aria-label="More" className="-mx-4">
         <ul className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-3 sm:grid sm:grid-cols-3 sm:overflow-visible">
-          {[{ to: '/request', label: t('rq.cta'), icon: PhoneIncoming, cls: 'tone-navy', ic: 'text-amber' },
-            { to: '/signup', label: t('home.join'), icon: HardHat, cls: 'tone-amber', ic: 'text-ink' },
-            { to: '/workers', label: t('home.browse'), icon: Users, cls: 'tone-soft', ic: 'text-brand' }].map(c => (
+          {[{ to: '/request', ext: false, label: t('rq.cta'), icon: PhoneIncoming, cls: 'tone-navy', ic: 'text-amber' },
+            { to: WORKER_PATH, ext: true, label: t('home.joinw'), icon: HardHat, cls: 'tone-amber', ic: 'text-ink' },
+            { to: '/workers', ext: false, label: t('home.browse'), icon: Users, cls: 'tone-soft', ic: 'text-brand' }].map(c => (
             <li key={c.to} className="w-[74%] shrink-0 snap-start sm:w-auto">
-              <Link to={c.to} className={`${c.cls} flex min-h-32 flex-col justify-between rounded-[28px] p-5 transition-transform duration-150 active:scale-[0.97]`}>
+              {(() => { const cn = `${c.cls} flex min-h-32 flex-col justify-between rounded-[28px] p-5 transition-transform duration-150 active:scale-[0.97]`; const body = <>
                 <c.icon size={30} className={c.ic} aria-hidden />
-                <span className="flex items-end justify-between gap-3"><span className="text-xl font-bold leading-tight">{c.label}</span><ChevronRight size={22} className="shrink-0 opacity-80" aria-hidden /></span></Link></li>))}
+                <span className="flex items-end justify-between gap-3"><span className="text-xl font-bold leading-tight">{c.label}</span><ChevronRight size={22} className="shrink-0 opacity-80" aria-hidden /></span></>; return c.ext ? <a href={c.to} className={cn}>{body}</a> : <Link to={c.to} className={cn}>{body}</Link> })()}</li>))}
         </ul>
       </section>
     </div>)

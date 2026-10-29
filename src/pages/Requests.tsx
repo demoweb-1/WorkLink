@@ -45,7 +45,7 @@ export default function Requests() {
                 <p className="text-muted">{q.district} · {ago(q.created_at)} {t('wr.ago')}</p></div></div>
             {q.note && <p className="mt-3">{q.note}</p>}
             <div className="mt-4 flex gap-2">
-              <a href={`tel:${q.phone}`} className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full bg-brand text-lg font-semibold text-white active:scale-[0.97]"><Phone size={22} aria-hidden />{t('btn.call')}</a>
+              <a href={`tel:${q.phone}`} className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full bg-action text-lg font-semibold text-on-action active:scale-[0.97]"><Phone size={22} aria-hidden />{t('btn.call')}</a>
               <a href={`https://wa.me/${q.phone.slice(1)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full border border-line bg-white text-lg font-semibold active:scale-[0.97]"><MessageCircle size={22} aria-hidden />{t('btn.whatsapp')}</a></div>
           </article>) })}
       </div>

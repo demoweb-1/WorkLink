@@ -1,5 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Home, Search, Briefcase, CalendarCheck, User, LogIn, PhoneIncoming } from 'lucide-react'
+import { Home, Search, Briefcase, CalendarCheck, User, LogIn, PhoneIncoming, Wrench } from 'lucide-react'
+import { IS_WORKER_APP } from '../lib/app'
 import { useAuth } from '../lib/auth'
 import { ADVANCED_JOBS, BRAND } from '../lib/constants'
 import { btnPrimary, btnSecondary } from '../lib/ui'
@@ -9,15 +10,19 @@ import ReviewPrompt from './ReviewPrompt'
 import Logo from './Logo'
 
 export default function Layout() {
-  const { session, profile, signOut } = useAuth()
+  const { session, signOut } = useAuth()
   const { pathname } = useLocation()
   const { t, lang, setLang } = useI18n()
-  const items: NavItem[] = [
-    { to: '/', label: t('nav.home'), icon: Home, end: true },
-    session && profile?.is_worker ? { to: '/requests', label: t('nav.requests'), icon: PhoneIncoming } : { to: '/workers', label: t('nav.workers'), icon: Search },
-    ...(session && ADVANCED_JOBS ? [{ to: '/jobs', label: t('nav.jobs'), icon: Briefcase }, { to: '/bookings', label: t('nav.bookings'), icon: CalendarCheck }] : []),
-    ...(session ? [{ to: '/account', label: t('nav.account'), icon: User }] : [{ to: '/signin', label: t('nav.signin'), icon: LogIn }]),
-  ]
+  const items: NavItem[] = IS_WORKER_APP
+    ? (session
+      ? [{ to: '/', label: t('nav.requests'), icon: PhoneIncoming, end: true }, { to: '/my-services', label: t('nav.services'), icon: Wrench }, { to: '/account', label: t('nav.account'), icon: User }]
+      : [{ to: '/', label: t('nav.home'), icon: Home, end: true }, { to: '/signin', label: t('nav.signin'), icon: LogIn }])
+    : [
+      { to: '/', label: t('nav.home'), icon: Home, end: true },
+      { to: '/workers', label: t('nav.workers'), icon: Search },
+      ...(session && ADVANCED_JOBS ? [{ to: '/jobs', label: t('nav.jobs'), icon: Briefcase }, { to: '/bookings', label: t('nav.bookings'), icon: CalendarCheck }] : []),
+      ...(session ? [{ to: '/account', label: t('nav.account'), icon: User }] : [{ to: '/signin', label: t('nav.signin'), icon: LogIn }]),
+    ]
   const topItems = items.filter(i => i.to !== '/signin')
   return (
     <div className="relative isolate min-h-dvh overflow-x-clip">
@@ -42,6 +47,6 @@ export default function Layout() {
         <footer className="mt-16 border-t border-line pt-6 text-sm text-muted"><Logo size={26} className="text-ink" /><p className="mt-2 font-medium text-ink">{t('brand.tag')}</p><p className="mt-1">Payment is arranged directly between customers and workers. {BRAND} does not collect or guarantee payment.</p></footer>
       </main>
       <GlassNav items={items} variant="bottom" />
-      <ReviewPrompt />
+      {!IS_WORKER_APP && <ReviewPrompt />}
     </div>)
 }
