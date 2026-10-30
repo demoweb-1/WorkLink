@@ -6,6 +6,7 @@ import { useAuth } from '../lib/auth'
 import { useI18n } from '../lib/i18n'
 import { iconFor } from '../lib/icons'
 import { btnPrimary, cardCls } from '../lib/ui'
+import AlertsCard from '../components/AlertsCard'
 
 type Req = { id: string; district: string; phone: string; note: string | null; created_at: string; service_categories: { name: string; slug: string; icon_name: string | null } | null }
 const ago = (iso: string) => { const m = Math.max(1, Math.round((Date.now() - new Date(iso).getTime()) / 60000)); return m < 60 ? `${m} min` : m < 1440 ? `${Math.round(m / 60)} h` : `${Math.round(m / 1440)} d` }
@@ -33,6 +34,7 @@ export default function Requests() {
   return (
     <div className="max-w-2xl">
       <h1 className="text-4xl font-bold tracking-tight">{t('wr.title')}</h1>
+      <div className="mt-4"><AlertsCard /></div>
       <div className="mt-6 space-y-4" aria-live="polite">
         {error && <p role="alert" className="text-error">{error}</p>}
         {!error && !items && [0, 1].map(i => <div key={i} className="h-44 animate-pulse rounded-2xl bg-subtle" />)}

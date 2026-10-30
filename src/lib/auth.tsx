@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
+import { disablePush } from './push'
 
 export type Profile = { display_name: string; is_worker: boolean; district: string | null }
 type Ctx = { session: Session | null; profile: Profile | null; loading: boolean; signOut: () => Promise<void>; refreshProfile: () => Promise<void> }
@@ -37,5 +38,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const t = setTimeout(() => { fetchProfile(session).then(setProfile) }, 0) // not awaited inside the auth callback
     return () => clearTimeout(t)
   }, [session])
-  return <AuthCtx.Provider value={{ session, profile, loading, refreshProfile, signOut: async () => { await supabase.auth.signOut() } }}>{children}</AuthCtx.Provider>
+  return <AuthCtx.Provider value={{ session, profile, loading, refreshProfile, signOut: async () => { await disablePush(); await supabase.auth.signOut() } }}>{children}</AuthCtx.Provider>
 }
