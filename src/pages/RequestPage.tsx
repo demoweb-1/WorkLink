@@ -6,7 +6,7 @@ import { useAuth } from '../lib/auth'
 import { useI18n } from '../lib/i18n'
 import { iconFor } from '../lib/icons'
 import { normalizePhone } from '../lib/phone'
-import { getDistrict, getLastRequest, getPhone, setDistrictPref, setLastRequest, setPhonePref } from '../lib/recent'
+import { addMyRequest, getDistrict, getMyRequests, getPhone, removeMyRequest, setDistrictPref, setPhonePref } from '../lib/recent'
 import type { Cat } from '../lib/constants'
 import { btnPrimary, inputCls } from '../lib/ui'
 import DistrictChip from '../components/DistrictChip'
@@ -20,6 +20,7 @@ export default function RequestPage() {
   const [district, setDistrict] = useState(getDistrict)
   const [phone, setPhone] = useState(getPhone)
   const [note, setNote] = useState('')
+  const [loc, setLoc] = useState('')
   const [state, setState] = useState<'form' | 'sending' | 'done' | 'cancelled'>('form')
   const [err, setErr] = useState<string | null>(null)
 
@@ -45,14 +46,14 @@ export default function RequestPage() {
     if (!district) return setErr(t('rq.pick'))
     if (!n) return setErr(t('rq.bad'))
     setState('sending')
-    const { data, error } = await supabase.rpc('create_quick_request', { p_category: cat!.id, p_district: district, p_phone: n, p_note: note })
+    const { data, error } = await supabase.rpc('create_quick_request', { p_category: cat!.id, p_district: district, p_phone: n, p_note: note, p_location: loc })
     if (error) { setState('form'); return setErr(t('rq.fail')) }
     setPhonePref(n); setDistrictPref(district)
-    const r = data as { id: string; token: string }; setLastRequest({ id: r.id, token: r.token }); setState('done')
+    const r = data as { id: string; token: string }; addMyRequest({ id: r.id, token: r.token, at: Date.now() }); setState('done')
   }
   async function cancel() {
-    const r = getLastRequest(); if (r) await supabase.rpc('close_quick_request', { p_id: r.id, p_token: r.token })
-    setLastRequest(null); setState('cancelled')
+    const r = getMyRequests()[0]; if (r) { await supabase.rpc('close_quick_request', { p_id: r.id, p_token: r.token }); removeMyRequest(r.id) }
+    setState('cancelled')
   }
 
   if (state === 'done' || state === 'cancelled') return (
@@ -61,7 +62,7 @@ export default function RequestPage() {
       <h1 role="status" className="text-4xl font-bold tracking-tight">{state === 'done' ? t('rq.done') : t('rq.cancelled')}</h1>
       {state === 'done' && <><p className="text-lg text-muted">{t('rq.done2')}</p>
         <button onClick={cancel} className="min-h-12 rounded-full border border-line bg-white px-5 font-semibold active:scale-[0.97]">{t('rq.cancel')}</button></>}
-      <div><Link to="/" className="inline-flex min-h-12 items-center font-semibold text-brand">{t('nav.home')}</Link></div></div>)
+      <div className="flex gap-4"><Link to="/my-requests" className="inline-flex min-h-12 items-center font-semibold text-brand">{t('nav.my')}</Link><Link to="/" className="inline-flex min-h-12 items-center font-semibold text-brand">{t('nav.home')}</Link></div></div>)
 
   return (
     <div className="max-w-md">
@@ -71,6 +72,8 @@ export default function RequestPage() {
         <DistrictChip required value={district} onChange={setDistrict} />
         <label className="block text-sm font-medium">{t('rq.phone')}
           <input name="phone" type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="0771234567…" className={`${inputCls} !min-h-14 text-xl font-semibold`} /></label>
+        <label className="block text-sm font-medium">{t('rq.loc')}
+          <input name="location" autoComplete="street-address" maxLength={120} value={loc} onChange={e => setLoc(e.target.value)} className={`${inputCls} !min-h-12`} /></label>
         <label className="block text-sm font-medium">{t('rq.note')}
           <input name="note" autoComplete="off" maxLength={200} value={note} onChange={e => setNote(e.target.value)} className={`${inputCls} !min-h-12`} /></label>
         {err && <p role="alert" className="pop text-error">{err}</p>}

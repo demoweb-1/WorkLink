@@ -8,6 +8,7 @@ import Landing from './pages/Landing'
 import Workers from './pages/Workers'
 import QuickFind from './pages/QuickFind'
 import RequestPage from './pages/RequestPage'
+import MyRequests from './pages/MyRequests'
 import WorkerHome from './pages/WorkerHome'
 import WorkerProfile from './pages/WorkerProfile'
 import MyServices from './pages/MyServices'
@@ -41,6 +42,7 @@ export default function App() {
         </> : <>
           <Route index element={<Landing />} />
           <Route path="find/:slug" element={<QuickFind />} />
+          <Route path="my-requests" element={<MyRequests />} />
           <Route path="request" element={<RequestPage />} />
           <Route path="request/:slug" element={<RequestPage />} />
           <Route path="workers" element={<Workers />} />

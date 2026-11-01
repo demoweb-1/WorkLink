@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Home, Search, Briefcase, CalendarCheck, User, LogIn, PhoneIncoming, Wrench } from 'lucide-react'
+import { Home, Search, Briefcase, CalendarCheck, User, LogIn, PhoneIncoming, Wrench, ClipboardList } from 'lucide-react'
 import { IS_WORKER_APP } from '../lib/app'
 import { useAuth } from '../lib/auth'
 import { ADVANCED_JOBS, BRAND } from '../lib/constants'
@@ -19,7 +19,7 @@ export default function Layout() {
       : [{ to: '/', label: t('nav.home'), icon: Home, end: true }, { to: '/signin', label: t('nav.signin'), icon: LogIn }])
     : [
       { to: '/', label: t('nav.home'), icon: Home, end: true },
-      { to: '/workers', label: t('nav.workers'), icon: Search },
+      { to: '/my-requests', label: t('nav.my'), icon: ClipboardList },
       ...(session && ADVANCED_JOBS ? [{ to: '/jobs', label: t('nav.jobs'), icon: Briefcase }, { to: '/bookings', label: t('nav.bookings'), icon: CalendarCheck }] : []),
       ...(session ? [{ to: '/account', label: t('nav.account'), icon: User }] : [{ to: '/signin', label: t('nav.signin'), icon: LogIn }]),
     ]

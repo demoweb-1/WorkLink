@@ -8,3 +8,7 @@ export function setPhonePref(p: string) { try { localStorage.setItem('wl_phone',
 export type LastRequest = { id: string; token: string }
 export function getLastRequest(): LastRequest | null { try { return JSON.parse(localStorage.getItem('wl_last_request') ?? 'null') as LastRequest | null } catch { return null } }
 export function setLastRequest(r: LastRequest | null) { try { r ? localStorage.setItem('wl_last_request', JSON.stringify(r)) : localStorage.removeItem('wl_last_request') } catch { /* ignore */ } }
+export type MyRequest = { id: string; token: string; at: number }
+export function getMyRequests(): MyRequest[] { try { return JSON.parse(localStorage.getItem('wl_my_requests') ?? '[]') as MyRequest[] } catch { return [] } }
+export function addMyRequest(r: MyRequest) { try { localStorage.setItem('wl_my_requests', JSON.stringify([r, ...getMyRequests()].slice(0, 10))) } catch { /* ignore */ } }
+export function removeMyRequest(id: string) { try { localStorage.setItem('wl_my_requests', JSON.stringify(getMyRequests().filter(r => r.id !== id))) } catch { /* ignore */ } }
