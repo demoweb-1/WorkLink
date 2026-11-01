@@ -8,7 +8,7 @@ import { iconFor } from '../lib/icons'
 import { btnPrimary, btnSecondary, cardCls, inputCls } from '../lib/ui'
 import AlertsCard from '../components/AlertsCard'
 
-type Req = { id: string; district: string; location: string | null; note: string | null; created_at: string; service_categories: { name: string; slug: string; icon_name: string | null } | null }
+type Req = { id: string; district: string; location: string | null; photo_path: string | null; voice_path: string | null; note: string | null; created_at: string; service_categories: { name: string; slug: string; icon_name: string | null } | null }
 const ago = (iso: string) => { const m = Math.max(1, Math.round((Date.now() - new Date(iso).getTime()) / 60000)); return m < 60 ? `${m} min` : m < 1440 ? `${Math.round(m / 60)} h` : `${Math.round(m / 1440)} d` }
 const big = 'inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full text-lg font-semibold active:scale-[0.97]'
 
@@ -18,17 +18,21 @@ export default function Requests() {
   const { t, catName } = useI18n()
   const [items, setItems] = useState<Req[] | null>(null)
   const [mine, setMine] = useState<Record<string, string>>({})
+  const [media, setMedia] = useState<Record<string, string>>({})
   const [phones, setPhones] = useState<Record<string, string>>({})
   const [price, setPrice] = useState<Record<string, string>>({})
   const [hasService, setHasService] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const load = useCallback(async () => {
     const [r, s, m] = await Promise.all([
-      supabase.from('quick_requests').select('id,district,location,note,created_at,service_categories(name,slug,icon_name)').eq('status', 'open').gt('expires_at', new Date().toISOString()).order('created_at', { ascending: false }).limit(30),
+      supabase.from('quick_requests').select('id,district,location,photo_path,voice_path,note,created_at,service_categories(name,slug,icon_name)').eq('status', 'open').gt('expires_at', new Date().toISOString()).order('created_at', { ascending: false }).limit(30),
       supabase.from('worker_services').select('id', { count: 'exact', head: true }).eq('worker_id', session!.user.id).eq('is_active', true),
       supabase.from('request_responses').select('request_id,response')])
     if (r.error) return setError('Could not load requests. Check your connection and try again.')
     setError(null); setItems((r.data ?? []) as unknown as Req[]); setHasService((s.count ?? 0) > 0)
+    const rows = (r.data ?? []) as unknown as Req[]
+    const paths = rows.flatMap(q => [q.photo_path, q.voice_path]).filter((x): x is string => Boolean(x))
+    if (paths.length) { const { data: signed } = await supabase.storage.from('request-media').createSignedUrls(paths, 3600); setMedia(Object.fromEntries((signed ?? []).filter(x => x.path && x.signedUrl).map(x => [x.path as string, x.signedUrl as string]))) }
     setMine(Object.fromEntries(((m.data ?? []) as { request_id: string; response: string }[]).map(x => [x.request_id, x.response])))
   }, [session])
   useEffect(() => {
@@ -58,6 +62,8 @@ export default function Requests() {
               <div className="min-w-0"><p className="text-lg font-semibold">{catName(q.service_categories?.slug ?? '', q.service_categories?.name ?? '')}</p>
                 <p className="text-muted">{[q.location, q.district].filter(Boolean).join(', ')} · {ago(q.created_at)} {t('wr.ago')}</p></div></div>
             {q.note && <p className="mt-3 text-lg">{q.note}</p>}
+            {q.photo_path && media[q.photo_path] && <a href={media[q.photo_path]} target="_blank" rel="noopener noreferrer" aria-label={t('wr.photo')}><img src={media[q.photo_path]} alt="" loading="lazy" className="mt-3 max-h-56 w-full rounded-2xl object-cover" /></a>}
+            {q.voice_path && media[q.voice_path] && <audio controls src={media[q.voice_path]} className="mt-3 w-full" />}
             {!yes ? <div className="mt-4 space-y-3">
               <label className="block text-sm font-medium">{t('wr.price')}<input inputMode="numeric" name="price" autoComplete="off" value={price[q.id] ?? ''} onChange={e => setPrice(p => ({ ...p, [q.id]: e.target.value }))} className={`${inputCls} !min-h-12`} /></label>
               <div className="flex gap-2"><button onClick={() => respond(q.id, 'accept')} className={`${big} bg-action text-on-action`}>{t('wr.yes')}</button>

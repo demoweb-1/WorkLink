@@ -9,6 +9,8 @@ import { normalizePhone } from '../lib/phone'
 import { addMyRequest, getDistrict, getMyRequests, getPhone, removeMyRequest, setDistrictPref, setPhonePref } from '../lib/recent'
 import type { Cat } from '../lib/constants'
 import { btnPrimary, inputCls } from '../lib/ui'
+import { audioExt, baseType, compressImage } from '../lib/media'
+import VoiceRecorder from '../components/VoiceRecorder'
 import DistrictChip from '../components/DistrictChip'
 
 // "Call me back": service + district + phone number. No account, almost no typing.
@@ -21,6 +23,8 @@ export default function RequestPage() {
   const [phone, setPhone] = useState(getPhone)
   const [note, setNote] = useState('')
   const [loc, setLoc] = useState('')
+  const [photo, setPhoto] = useState<File | null>(null)
+  const [voice, setVoice] = useState<Blob | null>(null)
   const [state, setState] = useState<'form' | 'sending' | 'done' | 'cancelled'>('form')
   const [err, setErr] = useState<string | null>(null)
 
@@ -49,7 +53,14 @@ export default function RequestPage() {
     const { data, error } = await supabase.rpc('create_quick_request', { p_category: cat!.id, p_district: district, p_phone: n, p_note: note, p_location: loc })
     if (error) { setState('form'); return setErr(t('rq.fail')) }
     setPhonePref(n); setDistrictPref(district)
-    const r = data as { id: string; token: string }; addMyRequest({ id: r.id, token: r.token, at: Date.now() }); setState('done')
+    const r = data as { id: string; token: string }; addMyRequest({ id: r.id, token: r.token, at: Date.now() })
+    // Optional extras: the request is already saved, so a failed upload never loses it.
+    const up = async (path: string, blob: Blob) => { const { error } = await supabase.storage.from('request-media').upload(path, blob, { contentType: baseType(blob) }); return error ? null : path }
+    const [pp, vp] = await Promise.all([
+      photo ? compressImage(photo).then(b => up(`${r.id}/photo.jpg`, b)).catch(() => null) : null,
+      voice ? up(`${r.id}/voice.${audioExt(voice)}`, voice) : null])
+    if (pp || vp) await supabase.rpc('attach_request_media', { p_id: r.id, p_token: r.token, p_photo: pp, p_voice: vp })
+    setState('done')
   }
   async function cancel() {
     const r = getMyRequests()[0]; if (r) { await supabase.rpc('close_quick_request', { p_id: r.id, p_token: r.token }); removeMyRequest(r.id) }
@@ -76,6 +87,9 @@ export default function RequestPage() {
           <input name="location" autoComplete="street-address" maxLength={120} value={loc} onChange={e => setLoc(e.target.value)} className={`${inputCls} !min-h-12`} /></label>
         <label className="block text-sm font-medium">{t('rq.note')}
           <input name="note" autoComplete="off" maxLength={200} value={note} onChange={e => setNote(e.target.value)} className={`${inputCls} !min-h-12`} /></label>
+        <label className="block text-sm font-medium">{t('rq.photo')}
+          <input name="photo" type="file" accept="image/*" capture="environment" onChange={e => setPhoto(e.target.files?.[0] ?? null)} className="mt-1.5 block w-full min-h-12 rounded-xl border border-line bg-white p-2.5 text-base file:mr-3 file:rounded-full file:border-0 file:bg-subtle file:px-4 file:py-2 file:font-semibold" /></label>
+        <VoiceRecorder onChange={setVoice} />
         {err && <p role="alert" className="pop text-error">{err}</p>}
         <button disabled={state === 'sending'} className={`${btnPrimary} !min-h-14 w-full text-lg`}>{state === 'sending' ? '…' : t('rq.send')}</button>
         <p className="text-sm text-muted">{t('rq.consent')}</p>
